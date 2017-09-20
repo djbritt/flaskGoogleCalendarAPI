@@ -7,7 +7,7 @@ This is an app to show how to use Flask routes, and other calendar functions wit
 # Tips and Notes
 This app uses the CalendarList: get and CalendarList: import
 
-You need to create a client_secrets.json file using the Google Developer Console, and have it in the same directory as the python file. In addition, the info I used is as follows.
+You need to create a client_secrets.json file using the Google Developer Console. To do this, enable the Google Calendar API, create a project, add the information below. Have it in the same directory as the python file. In addition, the info I used is as follows.
 
 ```
 Authorized Javascript Origins
