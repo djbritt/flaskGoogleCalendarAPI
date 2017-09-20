@@ -17,7 +17,7 @@ Authorized redirect URIs
 http://localhost:8080/oauth2callback
 ```
 
-#Running
+# Running
 Simply download the app, have the client_secrets.json file in the same directory as app.py, and type
 
 ```
