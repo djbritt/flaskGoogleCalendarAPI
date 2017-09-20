@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> </title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <style type="text/css">
+    .container {
+      width: 300px;
+      clear: both;
+    }
+    .container input {
+      width: 100%;
+      clear: both;
+    }
+    .button {
+      display: inline-block;
+      border-radius: 4px;
+      background-color: #f4511e;
+      border: none;
+      color: #FFFFFF;
+      text-align: center;
+      font-size: 28px;
+      padding: 20px;
+      width: 200px;
+      transition: all 0.5s;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .button span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+
+    .button span:after {
+      content: '\00bb';
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      right: -20px;
+      transition: 0.5s;
+    }
+
+    .button:hover span {
+      padding-right: 25px;
+    }
+
+    .button:hover span:after {
+      opacity: 1;
+      right: 0;
+    }
+  </style>
+</head>
+<body>
+  <script>
+  // var socket = io.connect('https://' + document.domain + ':' + location.port)
+  var socket = io.connect(document.domain + ':' + location.port)
+  socket.on("test", function() {
+    console.log("test recieved")
+  })
+  socket.on("calendarReturn", function(data) {
+    $("#getCalendars").hide()
+    var dropdown = $("<select id='selectCal'/>")
+    for (var i in data['data']) {
+      $('<option />', {value: data['data'][i].id, text: data['data'][i].name}).appendTo(dropdown);
+    }
+    dropdown.appendTo("#calendars")
+    $(".container").show()
+  })
+
+  </script>
+  <h1>Add Event to Google Calendar</h1>
+  <button class="button" id="getCalendars" style="vertical-align:middle"><span>Get Calendars</span></button>
+
+  <div class="container">
+    Enter Event Name
+    <input type="text" id="eventName">
+    <br>
+    Enter Event Start Time y-m-d h:m:s (9/20/2017 3:00PM = 2017-09-20 15:00:00)
+    <input type="text" id="startTime">
+    <br>
+    Enter Event End time y-m-d h:m:s
+    <input type="text" id="endTime">
+    <br>
+    Enter Calendar ID:
+    <!-- <input type="text" id="calendarID"> -->
+    <div id="calendars"></div>
+    <br>
+    <button class="button" id="submit" style="vertical-align:middle"><span>Submit</span></button>
+
+  </div>
+  <script>
+  //Hide container on page load
+  $(".container").hide()
+
+  $("#getCalendars").click(function() {
+    socket.emit('getCalendars')
+  })
+
+
+
+  $("#submit").click(function() {
+    var isValid = true;
+    $("input").each(function() {
+      var element = $(this);
+      if (element.val() == "") {
+        $(this).css("border", "2px solid red")
+        isValid = false;
+      } else {
+        $(this).css("border", "2px solid black")
+      }
+    });
+    if (isValid == false) {
+      alert("try again")
+    }
+    if (isValid == true) {
+      // console.log("form submitted!")
+      var name = $("#eventName").val()
+      var sTime = $("#startTime").val()
+      var eTime = $("#endTime").val()
+      var cid = $("#selectCal").val()
+      console.log(name)
+      console.log(sTime)
+      console.log(eTime)
+      console.log(cid)
+      $("#eventName").val('')
+      $("#startTime").val('')
+      $("#endTime").val('')
+      // $("#calendarID").val('')
+      socket.emit('eventDesc', {"name": name, "sTime": sTime, "eTime": eTime, "cid": cid})
+    }
+  })
+  </script>
+</body>
+</html>
