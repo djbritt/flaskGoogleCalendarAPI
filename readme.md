@@ -20,7 +20,7 @@ http://localhost:8080/oauth2callback
 #Running
 Simply download the app, have the client_secrets.json file in the same directory as app.py, and type
 
-```python
+```
 $ python app.py
 ```
 
